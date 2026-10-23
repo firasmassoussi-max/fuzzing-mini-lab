@@ -1,0 +1,22 @@
+Mini Fuzz Lab – verifizierte Beispielausgabe mit Python 3
+
+> python -m mini_fuzz fuzz --target buggy --iterations 2000 --seed 42
+Target: buggy | Seed: 42
+Tests: 2000 | Gültig: 824 | Abgelehnt: 956
+Unerwartete Abstürze: 1
+  IndexError: b'MSG' -> crashes/crash_IndexError_001.bin
+(Exit-Code 1, weil der Bug gefunden wurde)
+
+> python -m mini_fuzz replay crashes/crash_IndexError_001.bin
+Eingabe aus crashes/crash_IndexError_001.bin: b'MSG'
+  buggy: CRASH -> IndexError: list index out of range
+  fixed: kontrolliert abgelehnt -> Genau drei Felder erforderlich: MSG|absender|nachricht
+
+> python -m mini_fuzz fuzz --target fixed --iterations 2000 --seed 42
+Target: fixed | Seed: 42
+Tests: 2000 | Gültig: 824 | Abgelehnt: 1176
+Unerwartete Abstürze: 0
+
+> python -m unittest discover -s tests -v
+Ran 10 tests
+OK
